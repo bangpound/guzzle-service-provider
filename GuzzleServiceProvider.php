@@ -13,6 +13,7 @@ use Pimple\ServiceProviderInterface;
  * Guzzle service provider for Silex.
  *
  * = Parameters:
+ *  guzzle.client.defaults: (optional) array Default request options to apply to each request.
  *  guzzle.services: (optional) array Data describing your web service clients.
  *      See the Guzzle docs for more info.
  *
@@ -56,6 +57,9 @@ class GuzzleServiceProvider implements ServiceProviderInterface
             return $builder;
         };
 
+        // Default request options to apply to each request
+        $pimple['guzzle.client.defaults'] = array();
+
         // Guzzle event emitter. Extend this to attach event subscribers.
         $pimple['guzzle.emitter'] = function () {
             return new Emitter();
@@ -65,6 +69,7 @@ class GuzzleServiceProvider implements ServiceProviderInterface
         $pimple['guzzle.client'] = function (Container $c) {
             $client = new Client(array_filter(array(
                 'base_url' => $c['guzzle.base_url'],
+                'defaults' => $c['guzzle.client.defaults'],
                 'emitter' => $c['guzzle.emitter'],
             )));
 
