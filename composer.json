@@ -1,25 +1,28 @@
 {
-    "name": "guzzle/silex-provider",
-    "type": "silex-provider",
-    "description": "Guzzle silex provider",
+    "name": "bangpound/guzzle-service-provider",
+    "description": "Guzzle service provider",
     "license": "MIT",
-    "keywords": ["Guzzle", "Silex"],
+    "keywords": ["Guzzle", "Pimple", "Silex"],
     "authors": [
+        {
+            "name": "Benjamin Doherty",
+            "email": "bjd@bangpound.org"
+        },
         {
             "name": "Michael Dowling",
             "email": "mtdowling@gmail.com"
         }
     ],
     "require": {
-        "php": ">=5.3.2",
-        "guzzle/guzzle": ">=2.0.0"
+        "guzzlehttp/guzzle": "~5.2",
+        "pimple/pimple": "~3.0"
     },
     "autoload": {
         "classmap": [ "GuzzleServiceProvider.php" ]
     },
     "extra": {
         "branch-alias": {
-            "dev-feature/silex2": "2.0-dev"
+            "dev-develop": "2.0-dev"
         }
     }
 }
