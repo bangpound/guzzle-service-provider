@@ -13,6 +13,7 @@ use Pimple\ServiceProviderInterface;
  * Guzzle service provider for Silex.
  *
  * = Parameters:
+ *  guzzle.base_url: (optional) string Base URL for default client.
  *  guzzle.client.defaults: (optional) array Default request options to apply to each request.
  *  guzzle.services: (optional) array Data describing your web service clients.
  *      See the Guzzle docs for more info.
