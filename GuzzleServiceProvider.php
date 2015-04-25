@@ -12,15 +12,13 @@ use Pimple\ServiceProviderInterface;
  * Guzzle service provider for Silex.
  *
  * = Parameters:
- *  guzzle.services: (optional) array|string|SimpleXMLElement Data describing
- *      your web service clients.  You can pass the path to a file
- *      (.xml|.js|.json), an array of data, or an instantiated SimpleXMLElement
- *      containing configuration data.  See the Guzzle docs for more info.
+ *  guzzle.services: (optional) array Data describing your web service clients.
+ *      See the Guzzle docs for more info.
  *  guzzle.plugins: (optional) An array of guzzle plugins to register with the
  *      client.
  *
  * = Services:
- *   guzzle: An instantiated Guzzle ServiceBuilder.
+ *   guzzle: An instantiated Pimple container for all configured services.
  *   guzzle.client: A default Guzzle web service client using a dumb base URL.
  *
  * @author Michael Dowling <michael@guzzlephp.org>
