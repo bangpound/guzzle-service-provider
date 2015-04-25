@@ -2,8 +2,8 @@
 
 namespace Guzzle;
 
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use Guzzle\Service\Builder\ServiceBuilder;
 use Guzzle\Service\Client;
 
@@ -29,9 +29,9 @@ class GuzzleServiceProvider implements ServiceProviderInterface
     /**
      * Register Guzzle with Silex
      *
-     * @param Application $app Application to register with
+     * @param Container $app Application to register with
      */
-    public function register(Application $app)
+    public function register(Container $app)
     {
         $app['guzzle.base_url'] = '/';
         if(!isset($app['guzzle.plugins'])){
@@ -39,7 +39,7 @@ class GuzzleServiceProvider implements ServiceProviderInterface
         }
 
         // Register a Guzzle ServiceBuilder
-        $app['guzzle'] = $app->share(function () use ($app) {
+        $app['guzzle'] = function () use ($app) {
             if (!isset($app['guzzle.services'])) {
                 $builder = new ServiceBuilder(array());
             } else {
@@ -47,10 +47,10 @@ class GuzzleServiceProvider implements ServiceProviderInterface
             }
 
             return $builder;
-        });
+        };
 
         // Register a simple Guzzle Client object (requires absolute URLs when guzzle.base_url is unset)
-        $app['guzzle.client'] = $app->share(function() use ($app) {
+        $app['guzzle.client'] = function () use ($app) {
             $client = new Client($app['guzzle.base_url']);
 
             foreach ($app['guzzle.plugins'] as $plugin) {
@@ -58,10 +58,6 @@ class GuzzleServiceProvider implements ServiceProviderInterface
             }
 
             return $client;
-        });
-    }
-
-    public function boot(Application $app)
-    {
+        };
     }
 }
