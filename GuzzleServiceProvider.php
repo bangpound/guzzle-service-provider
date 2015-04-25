@@ -9,7 +9,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
 /**
- * Guzzle service provider for Silex
+ * Guzzle service provider for Silex.
  *
  * = Parameters:
  *  guzzle.services: (optional) array|string|SimpleXMLElement Data describing
@@ -28,14 +28,14 @@ use Pimple\ServiceProviderInterface;
 class GuzzleServiceProvider implements ServiceProviderInterface
 {
     /**
-     * Register Guzzle with Silex
+     * Register Guzzle with Silex.
      *
      * @param Container $app Application to register with
      */
     public function register(Container $app)
     {
         $app['guzzle.base_url'] = null;
-        if(!isset($app['guzzle.plugins'])){
+        if (!isset($app['guzzle.plugins'])) {
             $app['guzzle.plugins'] = array();
         }
 
