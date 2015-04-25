@@ -2,10 +2,11 @@
 
 namespace Guzzle;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Command\Guzzle\Description;
+use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use Guzzle\Service\Builder\ServiceBuilder;
-use Guzzle\Service\Client;
 
 /**
  * Guzzle service provider for Silex
@@ -33,17 +34,29 @@ class GuzzleServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
-        $app['guzzle.base_url'] = '/';
+        $app['guzzle.base_url'] = null;
         if(!isset($app['guzzle.plugins'])){
             $app['guzzle.plugins'] = array();
         }
 
         // Register a Guzzle ServiceBuilder
         $app['guzzle'] = function () use ($app) {
-            if (!isset($app['guzzle.services'])) {
-                $builder = new ServiceBuilder(array());
-            } else {
-                $builder = ServiceBuilder::factory($app['guzzle.services']);
+            $builder = new Container();
+
+            if (isset($app['guzzle.services'])) {
+                foreach ($app['guzzle.services'] as $name => $service) {
+                    $builder[$name.'.description'] = function () use ($service) {
+                        return new Description($service);
+                    };
+
+                    $builder[$name.'.client'] = function () use ($app) {
+                        return new Client();
+                    };
+
+                    $builder[$name] = function (Container $builder) use ($name) {
+                        return new GuzzleClient($builder[$name.'.client'], $builder[$name.'.description']);
+                    };
+                }
             }
 
             return $builder;
@@ -51,10 +64,14 @@ class GuzzleServiceProvider implements ServiceProviderInterface
 
         // Register a simple Guzzle Client object (requires absolute URLs when guzzle.base_url is unset)
         $app['guzzle.client'] = function () use ($app) {
-            $client = new Client($app['guzzle.base_url']);
+            $client = new Client(array_filter(array(
+                'base_url' => $app['guzzle.base_url'],
+            )));
+
+            $emitter = $client->getEmitter();
 
             foreach ($app['guzzle.plugins'] as $plugin) {
-                $client->addSubscriber($plugin);
+                $emitter->attach($plugin);
             }
 
             return $client;
