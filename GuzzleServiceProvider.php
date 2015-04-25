@@ -5,6 +5,7 @@ namespace Bangpound\GuzzleHttp\Pimple;
 use GuzzleHttp\Client;
 use GuzzleHttp\Command\Guzzle\Description;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
+use GuzzleHttp\Event\Emitter;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
@@ -14,8 +15,6 @@ use Pimple\ServiceProviderInterface;
  * = Parameters:
  *  guzzle.services: (optional) array Data describing your web service clients.
  *      See the Guzzle docs for more info.
- *  guzzle.plugins: (optional) An array of guzzle plugins to register with the
- *      client.
  *
  * = Services:
  *   guzzle: An instantiated Pimple container for all configured services.
@@ -33,9 +32,6 @@ class GuzzleServiceProvider implements ServiceProviderInterface
     public function register(Container $pimple)
     {
         $pimple['guzzle.base_url'] = null;
-        if (!isset($pimple['guzzle.plugins'])) {
-            $pimple['guzzle.plugins'] = array();
-        }
 
         // Register a Guzzle service container
         $pimple['guzzle'] = function (Container $c) {
@@ -60,17 +56,17 @@ class GuzzleServiceProvider implements ServiceProviderInterface
             return $builder;
         };
 
+        // Guzzle event emitter. Extend this to attach event subscribers.
+        $pimple['guzzle.emitter'] = function () {
+            return new Emitter();
+        };
+
         // Register a simple Guzzle Client object (requires absolute URLs when guzzle.base_url is unset)
         $pimple['guzzle.client'] = function (Container $c) {
             $client = new Client(array_filter(array(
                 'base_url' => $c['guzzle.base_url'],
+                'emitter' => $c['guzzle.emitter'],
             )));
-
-            $emitter = $client->getEmitter();
-
-            foreach ($c['guzzle.plugins'] as $plugin) {
-                $emitter->attach($plugin);
-            }
 
             return $client;
         };
