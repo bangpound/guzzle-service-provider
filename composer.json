@@ -18,6 +18,9 @@
         "guzzlehttp/guzzle-services": "~0.5",
         "pimple/pimple": "~3.0"
     },
+    "suggests": {
+        "guzzlehttp/log-subscriber": "Integrates logger service with Guzzle clients"
+    },
     "autoload": {
         "psr-4": {"Bangpound\\GuzzleHttp\\Pimple\\": ""}
     },
