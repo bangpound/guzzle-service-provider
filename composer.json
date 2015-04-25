@@ -19,7 +19,7 @@
         "pimple/pimple": "~3.0"
     },
     "autoload": {
-        "classmap": [ "GuzzleServiceProvider.php" ]
+        "psr-4": {"Bangpound\\GuzzleHttp\\Pimple\\": ""}
     },
     "extra": {
         "branch-alias": {

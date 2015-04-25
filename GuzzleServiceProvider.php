@@ -1,6 +1,6 @@
 <?php
 
-namespace Guzzle;
+namespace Bangpound\GuzzleHttp\Pimple;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Command\Guzzle\Description;
